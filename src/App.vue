@@ -1,10 +1,14 @@
 <template>
-  <div></div>
+ <soccer-wrapper/>
 </template>
 
 <script>
+import SoccerWrapper from "@/components/SoccerWrapper";
+
+
 export default {
-  name: "App"
+  name: "App",
+  components: {SoccerWrapper},
 }
 </script>
 
