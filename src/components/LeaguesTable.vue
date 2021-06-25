@@ -24,21 +24,17 @@
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
             <tr>
-
               <th v-for="header in tableHeaders" :key="header.id" scope="col"
                   class="w-12 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ">
                 {{ header.title }}
               </th>
-
             </tr>
-
             </thead>
-
             <tbody class="bg-white divide-y divide-gray-200">
             <tr v-for="competition in competitions" :key="competition.id">
-              <td
+              <td @click="showTeams(competition.id)"
                   class="px-6 py-4 whitespace-nowrap">
-                {{ competition.name }}
+                <a href="#">{{ competition.name }}</a>
               </td>
               <td
                   class="px-6 py-4 whitespace-nowrap">
@@ -69,7 +65,12 @@ import {ref, computed} from 'vue';
 
 export default {
   name: "LeaguesTable",
-  setup() {
+
+  emits: {
+    'show-teams': Number,
+  },
+
+  setup(props, {emit}) {
 
     const isLoading = ref(false);
     const error = ref(null);
@@ -94,11 +95,15 @@ export default {
     ]);
     const search = ref('');
 
+    const showTeams = (id) => {
+      emit('show-teams', id);
+    }
 
     const getListOfCompetitions = async () => {
       isLoading.value = true;
       try {
         listOfCompetitions.value = await API.getCompetitions();
+
         isLoading.value = false;
       } catch (e) {
         error.value = e;
@@ -109,23 +114,20 @@ export default {
 
     const competitions = computed(() => {
 
-      return listOfCompetitions.value.competitions
+      return listOfCompetitions.value.competitions.filter(competition => {
 
-          .filter(competition => {
+        const filter = search.value.toLowerCase();
 
-            const filter = search.value.toLowerCase();
+        const name = competition.name.toLowerCase().includes(filter);
+        const startDate = competition.currentSeason?.startDate.includes(filter);
+        const endDate = competition.currentSeason?.endDate.includes(filter);
+        const area = competition.area?.name.toLowerCase().includes(filter);
 
-            const name = competition.name.toLowerCase().includes(filter);
-            const startDate = competition.currentSeason?.startDate.includes(filter);
-            const endDate = competition.currentSeason?.endDate.includes(filter);
-            const area = competition.area?.name.toLowerCase().includes(filter);
-
-            return name || startDate || endDate || area;
-
-          });
+        return name || startDate || endDate || area;
+      });
     });
 
-    return {isLoading, error, competitions, tableHeaders, search};
+    return {isLoading, error, competitions, tableHeaders, search, showTeams};
 
   }
 }

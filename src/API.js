@@ -1,18 +1,21 @@
 export default class API {
-    static API_TOKEN = 'a94c4dc876174c0794541a34c4989d5c';
-
-    static async getCompetitions(filters = {}) {
-
-        if (Object.keys(filters).length === 0) {
-            filters = '';
-        }
-
-        const url = `http://api.football-data.org/v2/competitions/${filters}`;
-
-        return await fetch(url, {
-            headers: {'X-Auth-Token': this.API_TOKEN},
-            dataType: 'json',
-            type: 'GET',
-        }).then(r => r.json());
+    static API_TOKEN = '0f2f71ca8cae4a93bb5391f0b4c3bfeb';
+    static OPTIONS = {
+        headers: {'X-Auth-Token': this.API_TOKEN},
+        dataType: 'json',
+        type: 'GET',
+        mode: 'no-cors'
     }
+
+    static async getCompetitions() {
+        const url = `http://api.football-data.org/v2/competitions/`;
+        return await fetch(url, this.OPTIONS).then(r => r.json());
+    }
+
+    static async getTeams(id) {
+        const url = `http://api.football-data.org/v2/competitions/${id}/teams`;
+        return await fetch(url, this.OPTIONS).then(r => r.json());
+    }
+
+
 }

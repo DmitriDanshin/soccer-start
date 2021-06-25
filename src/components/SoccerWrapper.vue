@@ -1,7 +1,7 @@
 <template>
   <nav-soccer :active-page="activePage" @set-page="setPage"/>
-  <leagues-table v-if="activePage === 'leagues'"/>
-  <teams-table v-else-if="activePage === 'teams'"/>
+  <leagues-table v-if="activePage === 'leagues'" @show-teams="showTeams"/>
+  <teams-table v-else-if="activePage === 'teams'" :competitionId="competitionId"/>
   <league-calendar v-else-if="activePage === 'league-calendar'"/>
   <team-calendar v-else-if="activePage === 'team-calendar'"/>
 </template>
@@ -18,12 +18,21 @@ export default {
   name: "SoccerWrapper",
   components: {TeamCalendar, LeagueCalendar, TeamsTable, LeaguesTable, NavSoccer},
   setup() {
+
     const activePage = ref('leagues');
+    const competitionId = ref(2000);
+
+    const showTeams = (id) => {
+      activePage.value = 'teams';
+      competitionId.value = id;
+    };
+
     const setPage = (page) => {
       activePage.value = page;
     };
+
     return {
-      activePage, setPage
+      activePage, competitionId, setPage, showTeams
     }
   }
 }

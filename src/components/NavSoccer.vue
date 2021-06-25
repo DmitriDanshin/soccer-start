@@ -43,6 +43,10 @@ export default {
       required: true,
     }
   },
+  emits: {
+    'set-page': String,
+  },
+
   setup(props, {emit}) {
     const pages = ref([
       {
