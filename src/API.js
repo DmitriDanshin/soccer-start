@@ -16,8 +16,8 @@ export default class API {
         return await fetch(url, this.OPTIONS).then(r => r.json());
     }
 
-    static async getSingleCompetition() {
-        const url = `http://api.football-data.org/v2/competitions/2003`;
+    static async getSingleCompetition(id) {
+        const url = `http://api.football-data.org/v2/competitions/${id}/matches/`;
         return await fetch(url, this.OPTIONS).then(r => r.json());
     }
 

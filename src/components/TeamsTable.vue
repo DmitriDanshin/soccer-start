@@ -17,7 +17,7 @@
 
     <div class="relative inline-block my-2 text-gray-700">
       <select @change="getTeams"
-              class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border-2 border-gray-300 focus:outline-none rounded-lg appearance-none focus:shadow-outline"
+              class="w-full h-10 pl-3  ml-4 pr-6 text-base placeholder-gray-600 border-2 border-gray-300 focus:outline-none rounded-lg appearance-none focus:shadow-outline"
               placeholder="Regular input">
         <option value="">Выберите лигу</option>
         <option :selected="competitionId === competition.id" :value="competition.id"

@@ -8,7 +8,7 @@
                type="search" placeholder="Поиск" v-model="search">
         <div class="absolute right-0 top-0 mt-5 mr-4">
           <svg class="text-gray-600 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
-               version="1.1" id="Capa_1" x="0px" y="0px"
+                id="Capa_1" x="0px" y="0px"
                viewBox="0 0 56.966 56.966" style="enable-background:new 0 0 56.966 56.966;" xml:space="preserve"
                width="512px" height="512px">
             <path
@@ -16,15 +16,15 @@
           </svg>
         </div>
       </div>
-      <div class="flex flex-col">
+      <div class="flex flex-col  ml-4">
         <div class="mx-2">
           Выбор промежутка:
         </div>
         <div>
           <span class="mx-2">С</span>
-          <input v-model="fromDateFilter" class="inline-block" type="date">
+          <input v-model="fromDateFilter" class="p-1 mb-1 inline-block rounded-lg" type="date">
           <span class="mx-2">По</span>
-          <input v-model="toDateFilter" class="inline-block" type="date">
+          <input v-model="toDateFilter" class="p-1 mb-1 inline-block rounded-lg" type="date">
         </div>
       </div>
     </menu>
@@ -109,7 +109,6 @@ export default {
     const fromDateFilter = ref('2010-01-01');
     const toDateFilter = ref(new Date().toISOString().slice(0, 10));
 
-    console.log(toDateFilter.value)
     const showTeams = (id) => {
       emit('show-teams', id);
     }
