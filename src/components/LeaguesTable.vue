@@ -16,6 +16,17 @@
           </svg>
         </div>
       </div>
+      <div class="flex flex-col">
+        <div class="mx-2">
+          Выбор промежутка:
+        </div>
+        <div>
+          <span class="mx-2">С</span>
+          <input v-model="fromDateFilter" class="inline-block" type="date">
+          <span class="mx-2">По</span>
+          <input v-model="toDateFilter" class="inline-block" type="date">
+        </div>
+      </div>
     </menu>
 
     <div v-if="!isLoading" class="-my-2 overflow-x-auto ">
@@ -95,6 +106,10 @@ export default {
     ]);
     const search = ref('');
 
+    const fromDateFilter = ref('2010-01-01');
+    const toDateFilter = ref(new Date().toISOString().slice(0, 10));
+
+    console.log(toDateFilter.value)
     const showTeams = (id) => {
       emit('show-teams', id);
     }
@@ -123,11 +138,19 @@ export default {
         const endDate = competition.currentSeason?.endDate.includes(filter);
         const area = competition.area?.name.toLowerCase().includes(filter);
 
-        return name || startDate || endDate || area;
+        const fromDate = new Date(fromDateFilter.value);
+        const toDate = new Date(toDateFilter.value);
+
+        const fromCompetitionDate = new Date(competition.currentSeason?.startDate);
+        const toCompetitionDate = new Date(competition.currentSeason?.startDate);
+
+        const isIncludesToDateRange = (fromDate <= fromCompetitionDate) && (toCompetitionDate <= toDate);
+
+        return (name || startDate || endDate || area) && isIncludesToDateRange;
       });
     });
 
-    return {isLoading, error, competitions, tableHeaders, search, showTeams};
+    return {isLoading, error, competitions, tableHeaders, search, fromDateFilter, toDateFilter, showTeams};
 
   }
 }

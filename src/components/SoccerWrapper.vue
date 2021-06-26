@@ -7,9 +7,10 @@
 </template>
 
 <script>
+import {ref} from "vue"
+
 import NavSoccer from "@/components/NavSoccer";
 import LeaguesTable from "@/components/LeaguesTable";
-import {ref} from "vue";
 import TeamsTable from "@/components/TeamsTable";
 import LeagueCalendar from "@/components/LeagueCalendar";
 import TeamCalendar from "@/components/TeamCalendar";
@@ -20,7 +21,7 @@ export default {
   setup() {
 
     const activePage = ref('leagues');
-    const competitionId = ref(2000);
+    const competitionId = ref(0);
 
     const showTeams = (id) => {
       activePage.value = 'teams';

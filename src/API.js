@@ -4,7 +4,6 @@ export default class API {
         headers: {'X-Auth-Token': this.API_TOKEN},
         dataType: 'json',
         type: 'GET',
-        mode: 'no-cors'
     }
 
     static async getCompetitions() {
@@ -14,6 +13,11 @@ export default class API {
 
     static async getTeams(id) {
         const url = `http://api.football-data.org/v2/competitions/${id}/teams`;
+        return await fetch(url, this.OPTIONS).then(r => r.json());
+    }
+
+    static async getSingleCompetition() {
+        const url = `http://api.football-data.org/v2/competitions/2003`;
         return await fetch(url, this.OPTIONS).then(r => r.json());
     }
 

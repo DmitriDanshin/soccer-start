@@ -14,13 +14,33 @@
           </svg>
       </div>
     </div>
+
+    <div class="relative inline-block my-2 text-gray-700">
+      <select @change="getTeams"
+              class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border-2 border-gray-300 focus:outline-none rounded-lg appearance-none focus:shadow-outline"
+              placeholder="Regular input">
+        <option value="">Выберите лигу</option>
+        <option :selected="competitionId === competition.id" :value="competition.id"
+                v-for="competition in competitions" :key="competition.id">
+          {{ competition.name }}
+        </option>
+      </select>
+      <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+          <path
+              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+              clip-rule="evenodd" fill-rule="evenodd"></path>
+        </svg>
+      </div>
+    </div>
+
   </menu>
 
   <div class="flex flex-col">
     <div v-if="!isLoading" class="-my-2 overflow-x-auto ">
       <div class="py-2 align-middle inline-block min-w-full">
         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-          <table class="min-w-full divide-y divide-gray-200">
+          <table v-if="teams" class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
             <tr>
               <th v-for="header in tableHeaders" :key="header.id" scope="col"
@@ -29,7 +49,6 @@
               </th>
             </tr>
             </thead>
-
             <tbody class="bg-white divide-y divide-gray-200">
             <tr v-for="team in teams" :key="team.id">
               <td
@@ -61,6 +80,7 @@
             </tr>
             </tbody>
           </table>
+          <div v-else><p class="p-4 text-red-400">Не удалось загрузить данные с сервера, либо не выбрана лига.</p></div>
         </div>
       </div>
     </div>
@@ -85,6 +105,7 @@ export default {
 
     const isLoading = ref(false);
     const error = ref(null);
+    const listOfCompetitions = ref([]);
     const listOfTeams = ref({});
     const tableHeaders = ref([
       {
@@ -115,18 +136,31 @@ export default {
 
     const search = ref('');
 
-    const getListOfTeams = async () => {
+    const getListOfTeams = async (id) => {
+
       isLoading.value = true;
       try {
-        listOfTeams.value = await API.getTeams(props.competitionId);
-
+        listOfTeams.value = await API.getTeams(id);
         isLoading.value = false;
       } catch (e) {
         error.value = e;
       }
     };
 
-    getListOfTeams();
+    const getListOfCompetitions = async () => {
+      listOfCompetitions.value = await API.getCompetitions();
+    };
+
+    const getTeams = (event) => {
+      getListOfTeams(event.target.value);
+    }
+
+    getListOfCompetitions();
+    getListOfTeams(props.competitionId);
+
+    const competitions = computed(() => {
+      return listOfCompetitions.value.competitions;
+    })
 
     const teams = computed(() => {
 
@@ -146,7 +180,7 @@ export default {
     })
 
     return {
-      isLoading, error, teams, tableHeaders, search
+      isLoading, error, teams, tableHeaders, search, competitions, getTeams
     }
   },
 }
