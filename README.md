@@ -1,24 +1,25 @@
 # soccer-start
 
-## Project setup
+## Настройка API
+API ключ подключается в файле API.js в поле API_TOKEN. 
+Ключ был использован с сайта https://www.football-data.org/.
+
+Скорее всего из-за того, что API бесплатный, нельзя просмотреть все лиги, 
+но всё работает корректно если выбрать FIFA world cup. 
+
+## Установка
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+## Режим разработки
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+## Сборка
 ```
 npm run build
 ```
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+.

@@ -1,5 +1,5 @@
 export default class API {
-    static API_TOKEN = '0f2f71ca8cae4a93bb5391f0b4c3bfeb';
+    static API_TOKEN = '';
     static OPTIONS = {
         headers: {'X-Auth-Token': this.API_TOKEN},
         dataType: 'json',
