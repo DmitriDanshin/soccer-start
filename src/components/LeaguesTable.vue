@@ -8,7 +8,7 @@
                type="search" placeholder="Поиск" v-model="search">
         <div class="absolute right-0 top-0 mt-5 mr-4">
           <svg class="text-gray-600 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
-                id="Capa_1" x="0px" y="0px"
+               id="Capa_1" x="0px" y="0px"
                viewBox="0 0 56.966 56.966" style="enable-background:new 0 0 56.966 56.966;" xml:space="preserve"
                width="512px" height="512px">
             <path
@@ -117,7 +117,6 @@ export default {
       isLoading.value = true;
       try {
         listOfCompetitions.value = await API.getCompetitions();
-
         isLoading.value = false;
       } catch (e) {
         error.value = e;

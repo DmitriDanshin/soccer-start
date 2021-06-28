@@ -1,9 +1,10 @@
 <template>
   <nav-soccer :active-page="activePage" @set-page="setPage"/>
   <leagues-table v-if="activePage === 'leagues'" @show-teams="showTeams"/>
-  <teams-table v-else-if="activePage === 'teams'" :competitionId="competitionId"/>
-  <league-calendar v-else-if="activePage === 'league-calendar'"/>
-  <team-calendar v-else-if="activePage === 'team-calendar'"/>
+  <teams-table v-else-if="activePage === 'teams'" :competitions="listOfCompetitions" :competitionId="competitionId"/>
+  <league-calendar v-else-if="activePage === 'league-calendar'" @show-team="showTeam"
+                   :competitions="listOfCompetitions"/>
+  <team-calendar v-else-if="activePage === 'team-calendar'" :teamId="teamId" :competitions="listOfCompetitions"/>
 </template>
 
 <script>
@@ -14,26 +15,44 @@ import LeaguesTable from "@/components/LeaguesTable";
 import TeamsTable from "@/components/TeamsTable";
 import LeagueCalendar from "@/components/LeagueCalendar";
 import TeamCalendar from "@/components/TeamCalendar";
+import API from "@/API";
 
 export default {
   name: "SoccerWrapper",
   components: {TeamCalendar, LeagueCalendar, TeamsTable, LeaguesTable, NavSoccer},
+
   setup() {
 
     const activePage = ref('leagues');
     const competitionId = ref(0);
+    const teamId = ref(0);
+    const listOfCompetitions = ref([]);
+
+    const getListOfCompetitions = async () => {
+      listOfCompetitions.value = await API.getCompetitions();
+      listOfCompetitions.value = listOfCompetitions.value.competitions.map(c => {
+        return {'name': c.name, 'id': c.id}
+      })
+    };
+
+    getListOfCompetitions();
 
     const showTeams = (id) => {
       activePage.value = 'teams';
       competitionId.value = id;
     };
 
+    const showTeam = (id) => {
+      activePage.value = 'team-calendar';
+      teamId.value = id;
+    }
+
     const setPage = (page) => {
       activePage.value = page;
     };
 
     return {
-      activePage, competitionId, setPage, showTeams
+      activePage, competitionId, listOfCompetitions, teamId, setPage, showTeams, showTeam
     }
   }
 }

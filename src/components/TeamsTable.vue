@@ -97,6 +97,11 @@ export default {
   props: {
     competitionId: {
       type: Number,
+      required: true,
+
+    },
+    competitions: {
+      type: Array,
       required: true
     }
   },
@@ -105,7 +110,6 @@ export default {
 
     const isLoading = ref(false);
     const error = ref(null);
-    const listOfCompetitions = ref([]);
     const listOfTeams = ref({});
     const tableHeaders = ref([
       {
@@ -147,20 +151,11 @@ export default {
       }
     };
 
-    const getListOfCompetitions = async () => {
-      listOfCompetitions.value = await API.getCompetitions();
-    };
-
     const getTeams = (event) => {
       getListOfTeams(event.target.value);
     }
 
-    getListOfCompetitions();
     getListOfTeams(props.competitionId);
-
-    const competitions = computed(() => {
-      return listOfCompetitions.value.competitions;
-    })
 
     const teams = computed(() => {
 
@@ -180,7 +175,7 @@ export default {
     })
 
     return {
-      isLoading, error, teams, tableHeaders, search, competitions, getTeams
+      isLoading, error, teams, tableHeaders, search, getTeams
     }
   },
 }

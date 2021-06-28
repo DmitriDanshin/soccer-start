@@ -7,18 +7,23 @@ export default class API {
     }
 
     static async getCompetitions() {
-        const url = `http://api.football-data.org/v2/competitions/`;
-        return await fetch(url, this.OPTIONS).then(r => r.json());
+        const url = new URL(`https://api.football-data.org/v2/competitions/`);
+        return await fetch(url.href, this.OPTIONS).then(r => r.json());
     }
 
     static async getTeams(id) {
-        const url = `http://api.football-data.org/v2/competitions/${id}/teams`;
-        return await fetch(url, this.OPTIONS).then(r => r.json());
+        const url = new URL(`https://api.football-data.org/v2/competitions/${id}/teams`);
+        return await fetch(url.href, this.OPTIONS).then(r => r.json());
     }
 
     static async getSingleCompetition(id) {
-        const url = `http://api.football-data.org/v2/competitions/${id}/matches/`;
-        return await fetch(url, this.OPTIONS).then(r => r.json());
+        const url = new URL(`https://api.football-data.org/v2/competitions/${id}/matches/`);
+        return await fetch(url.href, this.OPTIONS).then(r => r.json());
+    }
+
+    static async getSingleTeam(id) {
+        const url = new URL(`https://api.football-data.org/v2/teams/${id}/matches`);
+        return await fetch(url.href, this.OPTIONS).then(r => r.json());
     }
 
 
