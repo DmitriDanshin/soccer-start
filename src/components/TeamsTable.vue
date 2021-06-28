@@ -1,12 +1,12 @@
 <template>
 
-  <menu class="bg-gray-200 flex justify-start m-0 shadow">
+  <div class="bg-gray-200 flex justify-start m-0 shadow">
     <div class="py-2 relative text-gray-600">
       <input class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
              type="search" placeholder="Поиск" v-model="search">
       <div class="absolute right-0 top-0 mt-5 mr-4">
         <svg class="text-gray-600 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
-             id="Capa_1" x="0px" y="0px"
+             x="0px" y="0px"
              viewBox="0 0 56.966 56.966" xml:space="preserve"
              width="512px" height="512px">
             <path
@@ -17,8 +17,7 @@
 
     <div class="relative inline-block my-2 text-gray-700">
       <select @change="getTeams"
-              class="w-full h-10 pl-3  ml-4 pr-6 text-base placeholder-gray-600 border-2 border-gray-300 focus:outline-none rounded-lg appearance-none focus:shadow-outline"
-              placeholder="Regular input">
+              class="w-full h-10 pl-3  ml-4 pr-6 text-base placeholder-gray-600 border-2 border-gray-300 focus:outline-none rounded-lg appearance-none focus:shadow-outline">
         <option value="">Выберите лигу</option>
         <option :selected="competitionId === competition.id" :value="competition.id"
                 v-for="competition in competitions" :key="competition.id">
@@ -34,7 +33,7 @@
       </div>
     </div>
 
-  </menu>
+  </div>
 
   <div class="flex flex-col">
     <div v-if="!isLoading" class="-my-2 overflow-x-auto ">
@@ -137,11 +136,11 @@ export default {
         title: 'НОМЕР ТЕЛЕФОНА',
       },
     ]);
-
     const search = ref('');
 
-    const getListOfTeams = async (id) => {
 
+
+    const getListOfTeams = async (id) => {
       isLoading.value = true;
       try {
         listOfTeams.value = await API.getTeams(id);

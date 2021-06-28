@@ -28,6 +28,7 @@ export default {
     const teamId = ref(0);
     const listOfCompetitions = ref([]);
 
+
     const getListOfCompetitions = async () => {
       listOfCompetitions.value = await API.getCompetitions();
       listOfCompetitions.value = listOfCompetitions.value.competitions.map(c => {
