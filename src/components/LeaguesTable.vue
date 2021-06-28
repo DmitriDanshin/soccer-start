@@ -44,7 +44,7 @@
             <tr v-for="competition in competitions" :key="competition.id">
               <td @click="showTeams(competition.id)"
                   class="px-6 py-4 whitespace-nowrap">
-                <a href="#">{{ competition.name }}</a>
+                <button>{{ competition.name }}</button>
               </td>
               <td
                   class="px-6 py-4 whitespace-nowrap">
@@ -110,8 +110,8 @@ export default {
 
     const showTeams = (id) => {
       emit('show-teams', id);
-    }
 
+    }
 
     const getListOfCompetitions = async () => {
       isLoading.value = true;

@@ -20,9 +20,9 @@
         <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
           <div class="hidden sm:block sm:ml-6">
             <div class="flex space-x-4">
-              <a v-for="page in pages" :key="page.id" href="#"
+              <button v-for="page in pages" :key="page.id"
                  :class="page.page === activePage ? 'bg-gray-900' : ''" @click="setActivePage(page.page)"
-                 class=" text-white px-3 py-2 rounded-md text-sm font-medium">{{ page.title }}</a>
+                 class=" text-white px-3 py-2 rounded-md text-sm font-medium">{{ page.title }}</button>
             </div>
           </div>
         </div>

@@ -138,9 +138,12 @@ export default {
     ]);
     const search = ref('');
 
-
+    const setStateOfCompetitionId = (id) => {
+      window.history.replaceState(null, null, `?competition-id=${id}`);
+    }
 
     const getListOfTeams = async (id) => {
+      setStateOfCompetitionId(id);
       isLoading.value = true;
       try {
         listOfTeams.value = await API.getTeams(id);
@@ -153,6 +156,8 @@ export default {
     const getTeams = (event) => {
       getListOfTeams(event.target.value);
     }
+
+    setStateOfCompetitionId(props.competitionId);
 
     getListOfTeams(props.competitionId);
 
