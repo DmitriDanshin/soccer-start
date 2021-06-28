@@ -72,6 +72,8 @@
 
 import API from "@/API";
 import {ref, computed} from 'vue';
+import {useStore} from "vuex";
+import Helpers from "@/Helpers";
 
 export default {
   name: "LeaguesTable",
@@ -82,6 +84,7 @@ export default {
 
   setup(props, {emit}) {
 
+    const store = useStore();
     const isLoading = ref(false);
     const error = ref(null);
     const listOfCompetitions = ref({});
@@ -103,6 +106,7 @@ export default {
         title: 'МЕСТО ПРОВЕДЕНИЯ',
       },
     ]);
+
     const search = ref('');
 
     const fromDateFilter = ref('2010-01-01');
@@ -110,8 +114,14 @@ export default {
 
     const showTeams = (id) => {
       emit('show-teams', id);
-
     }
+
+    const setActivePageGET = () => {
+      store.state.activePage = 'leagues';
+      window.history.replaceState(null, null,
+          Helpers.makeURL(store.state.activePage, store.getters.competitionId, store.getters.teamId));
+    }
+    setActivePageGET();
 
     const getListOfCompetitions = async () => {
       isLoading.value = true;

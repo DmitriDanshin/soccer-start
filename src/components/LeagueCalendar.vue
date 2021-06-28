@@ -18,7 +18,8 @@
       <select @change="getMatches"
               class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border-2 border-gray-300 focus:outline-none rounded-lg appearance-none focus:shadow-outline">
         <option value="">Выберите лигу</option>
-        <option :selected="competitionId === competition.id" :value="competition.id"
+        <option :selected="competitionId === competition.id || store.getters.competitionId === competition.id"
+                :value="competition.id"
                 v-for="competition in competitions" :key="competition.id">
           {{ competition.name }}
         </option>
@@ -59,6 +60,8 @@
 <script>
 import API from "@/API";
 import {computed, ref} from "vue";
+import {useStore} from "vuex";
+import Helpers from "@/Helpers";
 
 export default {
   name: "LeagueCalendar",
@@ -66,7 +69,6 @@ export default {
     competitionId: {
       type: Number,
       required: false,
-      default: 2000,
     },
     competitions: {
       type: Array,
@@ -80,6 +82,7 @@ export default {
 
   setup(props, {emit}) {
 
+    const store = useStore();
     const isLoading = ref(false);
     const error = ref(null);
     const singleCompetition = ref(null);
@@ -87,8 +90,21 @@ export default {
     const fromDateFilter = ref('2016-01-01');
     const toDateFilter = ref('2022-01-01');
 
+    const setCompetitionIdGET = (id) => {
+      store.state.competitionId = id;
+      window.history.replaceState(null, null,
+          Helpers.makeURL(store.state.activePage, store.getters.competitionId, store.getters.teamId));
+    }
+
+    const setActivePageGET = () => {
+      store.state.activePage = 'league-calendar';
+    }
+
+    setActivePageGET();
+
     const getSingleCompetition = async (id) => {
       isLoading.value = true;
+      setCompetitionIdGET(id);
       try {
         singleCompetition.value = await API.getSingleCompetition(id);
         isLoading.value = false;
@@ -105,7 +121,12 @@ export default {
       getSingleCompetition(event.target.value);
     }
 
-    getSingleCompetition(props.competitionId);
+
+    if (props.competitionId) {
+      getSingleCompetition(props.competitionId);
+    } else {
+      getSingleCompetition(store.getters.competitionId);
+    }
 
     const matches = computed(() => {
       return singleCompetition.value?.matches?.filter(match => {
@@ -128,7 +149,7 @@ export default {
     });
 
     return {
-      matches, search, fromDateFilter, toDateFilter, getMatches, showTeam
+      matches, search, fromDateFilter, toDateFilter, store, getMatches, showTeam
     }
 
   }

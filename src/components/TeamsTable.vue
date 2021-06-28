@@ -19,7 +19,8 @@
       <select @change="getTeams"
               class="w-full h-10 pl-3  ml-4 pr-6 text-base placeholder-gray-600 border-2 border-gray-300 focus:outline-none rounded-lg appearance-none focus:shadow-outline">
         <option value="">Выберите лигу</option>
-        <option :selected="competitionId === competition.id" :value="competition.id"
+        <option :selected="competitionId === competition.id || store.getters.competitionId === competition.id"
+                :value="competition.id"
                 v-for="competition in competitions" :key="competition.id">
           {{ competition.name }}
         </option>
@@ -90,6 +91,8 @@
 <script>
 import API from "@/API";
 import {ref, computed} from "vue";
+import {useStore} from 'vuex';
+import Helpers from '@/Helpers';
 
 export default {
   name: "TeamsTable",
@@ -97,7 +100,6 @@ export default {
     competitionId: {
       type: Number,
       required: true,
-
     },
     competitions: {
       type: Array,
@@ -106,7 +108,7 @@ export default {
   },
 
   setup(props) {
-
+    const store = useStore();
     const isLoading = ref(false);
     const error = ref(null);
     const listOfTeams = ref({});
@@ -138,12 +140,20 @@ export default {
     ]);
     const search = ref('');
 
-    const setStateOfCompetitionId = (id) => {
-      window.history.replaceState(null, null, `?competition-id=${id}`);
+    const setCompetitionIdGET = (id) => {
+      store.state.competitionId = id;
+      window.history.replaceState(null, null,
+          Helpers.makeURL(store.state.activePage, store.getters.competitionId, store.getters.teamId));
     }
 
+    const setActivePageGET = () => {
+      store.state.activePage = 'teams';
+    }
+
+    setActivePageGET();
+
     const getListOfTeams = async (id) => {
-      setStateOfCompetitionId(id);
+      setCompetitionIdGET(id);
       isLoading.value = true;
       try {
         listOfTeams.value = await API.getTeams(id);
@@ -154,12 +164,18 @@ export default {
     };
 
     const getTeams = (event) => {
+      setCompetitionIdGET(event.target.value);
       getListOfTeams(event.target.value);
     }
 
-    setStateOfCompetitionId(props.competitionId);
+    setCompetitionIdGET(store.state.competitionId);
 
-    getListOfTeams(props.competitionId);
+    if (props.competitionId) {
+      getListOfTeams(props.competitionId);
+    } else {
+      getListOfTeams(store.getters.competitionId);
+    }
+
 
     const teams = computed(() => {
 
@@ -179,7 +195,7 @@ export default {
     })
 
     return {
-      isLoading, error, teams, tableHeaders, search, getTeams
+      isLoading, error, teams, tableHeaders, search, store, getTeams
     }
   },
 }

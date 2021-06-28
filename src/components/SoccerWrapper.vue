@@ -16,17 +16,22 @@ import TeamsTable from "@/components/TeamsTable";
 import LeagueCalendar from "@/components/LeagueCalendar";
 import TeamCalendar from "@/components/TeamCalendar";
 import API from "@/API";
+import {useStore} from "vuex";
 
 export default {
   name: "SoccerWrapper",
   components: {TeamCalendar, LeagueCalendar, TeamsTable, LeaguesTable, NavSoccer},
 
   setup() {
-
-    const activePage = ref('leagues');
+    const store = useStore();
+    const activePage = ref('');
     const competitionId = ref(0);
     const teamId = ref(0);
     const listOfCompetitions = ref([]);
+
+    store.state.competitionId = new URL(document.location).searchParams.get('competition-id');
+    store.state.teamId = new URL(document.location).searchParams.get('team-id');
+    store.state.activePage = new URL(document.location).searchParams.get('active-page');
 
 
     const getListOfCompetitions = async () => {
@@ -51,6 +56,13 @@ export default {
     const setPage = (page) => {
       activePage.value = page;
     };
+
+    if (store.state.activePage) {
+      setPage(store.state.activePage);
+    } else {
+      setPage('leagues');
+    }
+
 
     return {
       activePage, competitionId, listOfCompetitions, teamId, setPage, showTeams, showTeam

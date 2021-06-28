@@ -19,8 +19,7 @@
       <select @change="getTeams"
               class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border-2 border-gray-300 focus:outline-none rounded-lg appearance-none focus:shadow-outline">
         <option value="">Выберите лигу</option>
-        <option :value="competition.id"
-                v-for="competition in competitions" :key="competition.id">
+        <option v-for="competition in competitions" :key="competition.id" :value="competition.id">
           {{ competition.name }}
         </option>
       </select>
@@ -31,8 +30,7 @@
               class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border-2 border-gray-300 focus:outline-none
               rounded-lg appearance-none focus:shadow-outline">
         <option value="">Выберите команду</option>
-        <option :value="team.id"
-                v-for="team in listOfTeams" :key="team.id">
+        <option v-for="team in listOfTeams" :key="team.id" :value="team.id">
           {{ team.name }}
         </option>
       </select>
@@ -61,6 +59,8 @@
 <script>
 import {computed, ref} from "vue";
 import API from "@/API";
+import {useStore} from "vuex";
+import Helpers from "@/Helpers";
 
 export default {
   name: "TeamCalendar",
@@ -79,6 +79,7 @@ export default {
 
   setup(props) {
 
+    const store = useStore();
     const isLoading = ref(false);
     const error = ref(null);
     const singleTeam = ref(null);
@@ -86,6 +87,7 @@ export default {
     const listOfTeams = ref([]);
 
     const getTeams = (event) => {
+      setCompetitionIdGET(event.target.value);
       getListOfTeams(event.target.value);
     }
 
@@ -105,6 +107,7 @@ export default {
 
     const getSingleTeam = async (id) => {
       isLoading.value = true;
+      setTeamIdGET(id);
       try {
         singleTeam.value = await API.getSingleTeam(id);
         isLoading.value = false;
@@ -113,7 +116,28 @@ export default {
       }
     };
 
-    getSingleTeam(props.teamId);
+    const setCompetitionIdGET = (id) => {
+      store.state.competitionId = id;
+      window.history.replaceState(null, null,
+          Helpers.makeURL(store.state.activePage, store.getters.competitionId, store.getters.teamId));
+    }
+
+    const setTeamIdGET = (id) => {
+      store.state.teamId = id;
+      window.history.replaceState(null, null,
+          Helpers.makeURL(store.state.activePage, store.getters.competitionId, store.getters.teamId));
+    }
+
+    const setActivePageGET = () => {
+      store.state.activePage = 'team-calendar';
+    }
+    setActivePageGET();
+
+    if (props.teamId) {
+      getSingleTeam(props.teamId);
+    } else {
+      getSingleTeam(store.getters.teamId)
+    }
 
     const matches = computed(() => {
       return singleTeam.value?.matches?.filter(match => {
@@ -123,19 +147,12 @@ export default {
         const homeTeam = match.homeTeam.name.toLowerCase().includes(filter);
         const awayTeam = match.awayTeam.name.toLowerCase().includes(filter);
 
-        // const fromDate = new Date(fromDateFilter.value);
-        // const toDate = new Date(toDateFilter.value);
-
-        // const matchDate = new Date(match.utcDate);
-
-        // const isIncludesToDateRange = (fromDate <= matchDate) && (matchDate <= toDate);
-
         return (awayTeam || homeTeam) // && isIncludesToDateRange;
 
       });
     });
     return {
-      isLoading, error, singleTeam, search, matches, listOfTeams, getTeams, getTeam
+      isLoading, error, singleTeam, search, matches, listOfTeams, store, getTeams, getTeam
     }
   }
 }
