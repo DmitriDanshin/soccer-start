@@ -121,7 +121,6 @@ export default {
       getSingleCompetition(event.target.value);
     }
 
-
     if (props.competitionId) {
       getSingleCompetition(props.competitionId);
     } else {

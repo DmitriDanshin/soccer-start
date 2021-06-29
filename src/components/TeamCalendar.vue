@@ -147,7 +147,7 @@ export default {
         const homeTeam = match.homeTeam.name.toLowerCase().includes(filter);
         const awayTeam = match.awayTeam.name.toLowerCase().includes(filter);
 
-        return (awayTeam || homeTeam) // && isIncludesToDateRange;
+        return awayTeam || homeTeam;
 
       });
     });

@@ -33,7 +33,6 @@ export default {
     store.state.teamId = new URL(document.location).searchParams.get('team-id');
     store.state.activePage = new URL(document.location).searchParams.get('active-page');
 
-
     const getListOfCompetitions = async () => {
       listOfCompetitions.value = await API.getCompetitions();
       listOfCompetitions.value = listOfCompetitions.value.competitions.map(c => {
@@ -62,7 +61,6 @@ export default {
     } else {
       setPage('leagues');
     }
-
 
     return {
       activePage, competitionId, listOfCompetitions, teamId, setPage, showTeams, showTeam
